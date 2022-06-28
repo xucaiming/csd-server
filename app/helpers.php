@@ -9,8 +9,11 @@ function changExcelRowToDataMap(array $fields, array $importData): array
     foreach ($importData as $row) {
         $mapRow = [];
         foreach($fields as $key => $field) {
-            if ($row[$key]) {
+            if (is_string($row[$key]) && $row[$key]) {
                 $mapRow[$field] = trim($row[$key]);
+            }
+            if (is_array($row[$key])) {
+                $mapRow[$field] = $row[$key];
             }
         }
         array_push($rowsData, $mapRow);
@@ -27,6 +30,14 @@ function changeImportDataEmptyStringToNull(array &$importData) {
                 unset($importData[$key][$k]);
             }
         }
+    }
+}
+
+function createFolder($path)
+{
+    if (!file_exists($path)) {
+        createFolder(dirname($path));
+        mkdir($path, 0777);
     }
 }
 

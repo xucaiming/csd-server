@@ -19,4 +19,13 @@ class Controller extends BaseController
 
         return [$pageSize, $offset];
     }
+
+    public function download(Request $request)
+    {
+        $model_name = $request->input('model_name');
+        $file_id = $request->input('file_id');
+        $fileModel = app('App\\Models\\' . $model_name)->query()->findOrFail($file_id);
+
+        return response()->download($fileModel->file_path, $fileModel->original_name);
+    }
 }
