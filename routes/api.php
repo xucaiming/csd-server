@@ -30,6 +30,13 @@ Route::namespace('Api')->group(function() {
         Route::resource('fee-item', 'FeeItemController')->only(['index', 'store', 'update', 'destroy']);
         Route::resource('payment-type', 'PaymentTypeController')->only(['index', 'store', 'update', 'destroy']);
         Route::resource('material-type', 'MaterialTypeController')->only(['index', 'store', 'update', 'destroy']);
+        Route::get('custom-company/tree', 'CustomCompanyController@getTree');
+
+        Route::resource('custom-company', 'CustomCompanyController')->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('custom-factory-part', 'CustomFactoryPartController')->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('custom-department', 'CustomDepartmentController')->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('custom-office', 'CustomOfficeController')->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('custom-window', 'CustomWindowController')->only(['index', 'store', 'update', 'destroy']);
 
         Route::get('material-unit', 'MaterialUnitController@index');
 
