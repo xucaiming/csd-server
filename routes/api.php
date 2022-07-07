@@ -38,6 +38,9 @@ Route::namespace('Api')->group(function() {
         Route::resource('custom-office', 'CustomOfficeController')->only(['index', 'store', 'update', 'destroy']);
         Route::resource('custom-window', 'CustomWindowController')->only(['index', 'store', 'update', 'destroy']);
 
+        Route::patch('supplier/{supplier}/toggle-status', 'SupplierController@toggleStatus');
+        Route::resource('supplier', 'SupplierController')->only(['index', 'store', 'update', 'destroy']);
+
         Route::get('material-unit', 'MaterialUnitController@index');
 
         Route::get('material', 'MaterialController@index');
