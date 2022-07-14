@@ -23,11 +23,6 @@ class Material extends Model
         'created_user_id',
     ];
 
-    public function materialType()
-    {
-        return $this->belongsTo(MaterialType::class);
-    }
-
     public static function boot()
     {
         parent::boot();
@@ -38,6 +33,11 @@ class Material extends Model
                 $material->save();
             }
         });
+    }
+
+    public function materialType()
+    {
+        return $this->belongsTo(MaterialType::class);
     }
 
     public function materialUnit()

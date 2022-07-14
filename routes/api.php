@@ -19,6 +19,7 @@ Route::namespace('Api')->group(function() {
         Route::post('user/toggle', 'UsersController@toggleStatus');
         Route::post('users', 'UsersController@store');
         Route::put('users/{user}', 'UsersController@update');
+        Route::patch('user/{userId}/subsector/{subsectorId}/sign-last-toggled', 'UsersController@signLastToggled');
 
         Route::get('roles', 'RolesController@index');
         Route::post('role/toggle', 'RolesController@toggleStatus');
@@ -43,6 +44,12 @@ Route::namespace('Api')->group(function() {
 
         Route::get('material-unit', 'MaterialUnitController@index');
 
+        Route::get('order/statuses', 'OrderController@statuses');
+        Route::get('order', 'OrderController@index');
+        Route::post('order', 'OrderController@save');
+        Route::post('order/get-material-excel-data', 'OrderController@getMaterialExcelData');
+        Route::post('order/check-material-excel-data', 'OrderController@checkMaterialExcelData');
+
         Route::get('material', 'MaterialController@index');
         Route::post('material', 'MaterialController@save');
         Route::post('material/get-excel-data', 'MaterialController@getExcelData');
@@ -55,5 +62,7 @@ Route::namespace('Api')->group(function() {
         Route::get('download-file', 'Controller@download');
 
         Route::get('material/export/download-template', 'MaterialController@downloadTemplate');
+
+        Route::get('order/order-material/download-template', 'OrderController@downloadMaterialTemplate');
     });
 });

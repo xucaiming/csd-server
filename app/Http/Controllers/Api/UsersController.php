@@ -141,4 +141,18 @@ class UsersController extends Controller
 
         return $this->success();
     }
+
+    public function signLastToggled($userId, $subsectorId)
+    {
+        $user = User::query()->with('subsectors')->findOrFail($userId);
+        $syncArr = [];
+        foreach ($user->subsectors as $subsector) {
+            $syncArr[$subsector->id] = [
+                'is_last_toggled' => $subsector->id == $subsectorId ? 1 : 0,
+            ];
+        }
+        \Log::info($syncArr);
+        $user->subsectors()->sync($syncArr);
+        return $this->success();
+    }
 }

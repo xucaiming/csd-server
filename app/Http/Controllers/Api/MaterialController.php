@@ -62,7 +62,7 @@ class MaterialController extends Controller
                 ]);
             }
 
-            $images = $request->images;
+            $images = $request->input('images', []);
             $postedImageIds = $originalImageIds = [];
             if ($material->materialImageFiles) {
                 $originalImageIds = $material->materialImageFiles->pluck('id')->toArray();
@@ -139,16 +139,18 @@ class MaterialController extends Controller
             }
         }
 
-        list($pageSize, $offset) = $this->getPaginationParams($request);
+        if ($request->has('page') && $request->has('pageSize')) {
+            list($pageSize, $offset) = $this->getPaginationParams($request);
+            $total = $builder->count();
+            $materials = $builder->offset($offset)->limit($pageSize)
+                ->orderBy('id', 'desc')
+                ->get();
 
-        $total = $builder->count();
-        $materials = $builder->offset($offset)->limit($pageSize)
-            ->orderBy('id', 'desc')
-            ->get();
+            $items = MaterialResource::collection($materials);
+            return $this->success(compact('total', 'items'));
+        }
 
-        $items = MaterialResource::collection($materials);
-
-        return $this->success(compact('total', 'items'));
+        return $this->success(MaterialResource::collection($builder->get()));
     }
 
     public function downloadTemplate(MaterialImportTemplate $template)

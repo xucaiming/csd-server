@@ -229,17 +229,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        // 费用规则类
-        'HandleFeeV1' => \App\Handlers\FeeCalculates\HandleFeeV1::class,
-        'RentFeeV1' => \App\Handlers\FeeCalculates\RentFeeV1::class,
-        'ReturnReceiveFeeV1' => \App\Handlers\FeeCalculates\ReturnReceiveFeeV1::class,
-
-        // 物流渠道类
-        'EasyPost' => \App\Handlers\ShipmentPlatforms\EasyPostShipment::class,
-
-        // 平台订单类
-        'Mabang' => \App\Handlers\OrderPlatforms\Mabang::class,
     ],
 
 ];

@@ -17,6 +17,10 @@ class SubsectorResource extends JsonResource
             'created_at' => (string) $this->created_at,
 
             'users_count' => $this->when($this->users_count, $this->users_count),
+
+            'is_last_toggled' => $this->whenPivotLoaded('user_subsector', function () {
+                return boolval($this->pivot->is_last_toggled);
+            }),
         ];
     }
 }

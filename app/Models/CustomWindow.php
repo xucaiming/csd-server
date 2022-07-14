@@ -20,4 +20,9 @@ class CustomWindow extends Model
         'phone',
         'remark',
     ];
+
+    public function customCompany()
+    {
+        return $this->belongsTo(CustomCompany::class, 'company_id');
+    }
 }

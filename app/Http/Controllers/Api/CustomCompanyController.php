@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 
 class CustomCompanyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $builder = CustomCompany::query()->with('subsector')->orderBy('id', 'desc');
+        if ($subsector_id = $request->header('subsector')) {
+            $builder->where('subsector_id', $subsector_id);
+        }
 
         $companies = $builder->get();
         return $this->success(CustomCompanyResource::collection($companies));
@@ -43,9 +46,14 @@ class CustomCompanyController extends Controller
         return $this->success();
     }
 
-    public function getTree()
+    public function getTree(Request $request)
     {
-        $companies = CustomCompany::query()->with('factoryParts.departments.offices.windows')->get();
+        $builder = CustomCompany::query()->with('factoryParts.departments.offices.windows');
+        if ($subsector_id = $request->header('subsector')) {
+            $builder->where('subsector_id', $subsector_id);
+        }
+
+        $companies = $builder->get();
 
         return $this->success(CustomCompanyResource::collection($companies));
     }

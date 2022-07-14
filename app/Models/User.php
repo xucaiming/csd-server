@@ -52,6 +52,7 @@ class User extends Authenticatable implements JWTSubject
     public function subsectors()
     {
         return $this->belongsToMany(Subsector::class, 'user_subsector', 'user_id', 'subsector_id')
-                    ->where('status', 1);
+                    ->where('status', 1)
+                    ->withPivot('is_last_toggled');
     }
 }
