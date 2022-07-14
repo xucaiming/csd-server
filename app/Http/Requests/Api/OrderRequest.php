@@ -6,9 +6,10 @@ class OrderRequest extends FormRequest
 {
     public function rules()
     {
+        $id = $this->id ?: 0;
         return [
             'company_id' => 'required',
-            'po_number' => 'required|unique:order,po_number',
+            'po_number' => 'required|unique:order,po_number,$id,id,deleted_at,null',
             'make_at' => 'required',
             'purchasing_agent' => 'required',
             'payment_type_id' => 'required',

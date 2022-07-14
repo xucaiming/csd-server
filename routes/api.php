@@ -46,6 +46,7 @@ Route::namespace('Api')->group(function() {
 
         Route::get('order/statuses', 'OrderController@statuses');
         Route::get('order', 'OrderController@index');
+        Route::get('order/{id}', 'OrderController@show');
         Route::post('order', 'OrderController@save');
         Route::post('order/get-material-excel-data', 'OrderController@getMaterialExcelData');
         Route::post('order/check-material-excel-data', 'OrderController@checkMaterialExcelData');

@@ -151,7 +151,6 @@ class UsersController extends Controller
                 'is_last_toggled' => $subsector->id == $subsectorId ? 1 : 0,
             ];
         }
-        \Log::info($syncArr);
         $user->subsectors()->sync($syncArr);
         return $this->success();
     }

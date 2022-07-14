@@ -37,8 +37,14 @@ class OrderController extends Controller
         'subsector',
     ];
 
-    public function save(OrderRequest $request, Order $order, OrderService $service)
+    public function save(OrderRequest $request, OrderService $service)
     {
+        if ($id = $request->input('id')) {
+            $order = Order::query()->findOrFail($id);
+        } else {
+            $order = new Order();
+        }
+
         $posted_materials = $request->input('order_materials', []);
         $allPassed = $service->makeMaterialDataValid($posted_materials);
 
@@ -135,6 +141,10 @@ class OrderController extends Controller
             'orderFile',
             'subsector',
         ]);
+        //$builder = Order::query()->with(self::RelationShip);
+
+        $subsector_id = $request->header('subsector');
+        $builder->where('subsector_id', $subsector_id);
 
         list($pageSize, $offset) = $this->getPaginationParams($request);
 
@@ -182,24 +192,29 @@ class OrderController extends Controller
         $currentSubsectorWindows = CustomWindow::query()->where('company_id', $company_id)->get()->toArray();
         $windows = array_column($currentSubsectorWindows, 'id', 'name');
 
-        $importData = [];
-        foreach ($excelData as $key => $value) {
-            $orderMaterial['material_code'] = $value[0];
-            $orderMaterial['material_name'] = $value[1];
-            $orderMaterial['material_type_id'] = $types[$value[2]] ?? NULL;
-            $orderMaterial['material_unit_id'] = $units[$value[3]] ?? NULL;
-            $orderMaterial['quantity'] = $value[4];
-            $orderMaterial['window_id'] = $windows[$value[5]] ?? NULL;
-            $orderMaterial['unit_price'] = $value[6];
-            $orderMaterial['tax_unit_price'] = $value[7];
-            $orderMaterial['tax_rate'] = $value[8];
-            $orderMaterial['delivery_date'] = $value[9];
+        try {
+            $importData = [];
+            foreach ($excelData as $key => $value) {
+                $orderMaterial['material_code'] = $value[0];
+                $orderMaterial['material_name'] = $value[1];
+                $orderMaterial['material_type_id'] = $types[$value[2]] ?? NULL;
+                $orderMaterial['material_unit_id'] = $units[$value[3]] ?? NULL;
+                $orderMaterial['quantity'] = $value[4];
+                $orderMaterial['window_id'] = $windows[$value[5]] ?? NULL;
+                $orderMaterial['unit_price'] = $value[6];
+                $orderMaterial['tax_unit_price'] = $value[7];
+                $orderMaterial['tax_rate'] = $value[8];
+                $orderMaterial['delivery_date'] = $value[9];
 
-            array_push($importData, $orderMaterial);
+                array_push($importData, $orderMaterial);
+            }
+            $allPassed = $service->makeMaterialDataValid($importData);
+
+            return $this->success(compact('allPassed', 'importData'));
+        } catch (\Exception $e) {
+            return $this->failed('请检查选择的Excel文件是否和模板对应');
         }
-        $allPassed = $service->makeMaterialDataValid($importData);
 
-        return $this->success(compact('allPassed', 'importData'));
     }
 
     public function checkMaterialExcelData(Request $request, OrderService $service)
@@ -209,5 +224,11 @@ class OrderController extends Controller
         $allPassed = $service->makeMaterialDataValid($importData);
 
         return $this->success(compact('allPassed', 'importData'));
+    }
+
+    public function show($id)
+    {
+        $order = Order::with(self::RelationShip)->findOrFail($id);
+        return $this->success(new OrderResource($order));
     }
 }

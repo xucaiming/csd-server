@@ -62,7 +62,8 @@ class MaterialController extends Controller
                 ]);
             }
 
-            $images = $request->input('images', []);
+            $images = $request->file('images', []);
+
             $postedImageIds = $originalImageIds = [];
             if ($material->materialImageFiles) {
                 $originalImageIds = $material->materialImageFiles->pluck('id')->toArray();
